@@ -1,0 +1,177 @@
+using System;
+using System.Linq;
+
+namespace ASP.NET.Digilevich.Day2.Task3
+{
+    public static class GreatestCommonDivisorClass
+    {
+        static delegate int Mod2Int(int arg1, int arg2);
+
+        public static int GCD(out TimeSpan timespan, params int[] numbers)
+        {
+            DateTime now = DateTime.Now;
+            int res = numbers.Aggregate(GCD);
+            timespan = new TimeSpan((DateTime.Now - now).Ticks);
+
+            return res;
+        }
+
+        static int GCD(int a, int b)
+        {
+            return b == 0 ? a : GCD(b, a % b);
+        }
+
+        public static int EuclideanAlgorithm(int a, int b, out TimeSpan timespan)
+        {
+            DateTime now = DateTime.Now;
+            while (a != 0 && b != 0)
+            {
+                if (a > b)
+                    a %= b;
+                else
+                    b %= a;
+            }
+            if (a == 0)
+            {
+                timespan = new TimeSpan((DateTime.Now - now).Ticks);
+                return b;
+            }
+            else
+            {
+                timespan = new TimeSpan((DateTime.Now - now).Ticks);
+                return a;
+            }
+        }
+
+        //public static int EuclideanAlgorithm(int a, int b, int c, out TimeSpan timespan)
+        //{
+        //    DateTime now = DateTime.Now;
+        //    while (a != 0 && b != 0 && c!=0)
+        //    {
+        //        if (a > b && a > c)
+        //            a %= EuclideanAlgorithm(b,c,out timespan);
+        //        else
+        //            if (b>a && b>c)
+        //                b %= EuclideanAlgorithm(a,c,out timespan);
+        //            else 
+        //                if (c>b && c>a)
+        //                    c %= EuclideanAlgorithm(a, c, out timespan);
+        //                else
+        //                    if(a==b && a > c)
+        //                    {
+        //                        a %= c;
+        //                        b %= c;
+        //                    }
+        //                    else
+        //                        if(b==c && b>a)
+        //                        {
+        //                            b %= a;
+        //                            c %= a;
+        //                        }
+        //                        else
+        //                        {
+        //                            a %=b;
+        //                            c %=b;
+        //                        }
+        //    }
+
+        //    if (a == 0)
+        //    {
+        //        timespan = new TimeSpan((DateTime.Now - now).Ticks);
+        //        return b;
+        //    }
+        //    else
+        //    {
+        //        timespan = new TimeSpan((DateTime.Now - now).Ticks);
+        //        return a;
+        //    }
+        //}
+
+
+
+        public static int EuclideanAlgorithm(int a, int b, int c, out TimeSpan timespan)
+        {
+            DateTime now = DateTime.Now;
+            while (a != 0 && b != 0 && c != 0)
+            {
+                if (a > b && a > c)
+                    a %= b;
+                else
+                    if (b > a && b > c)
+                        b %= a;
+            }
+
+            if (a == 0)
+            {
+                timespan = new TimeSpan((DateTime.Now - now).Ticks);
+                return b;
+            }
+            else
+            {
+                timespan = new TimeSpan((DateTime.Now - now).Ticks);
+                return a;
+            }
+        }
+
+        public static int SteinAlgorithm(int m, int n, out TimeSpan timespan)
+        {
+            DateTime now = DateTime.Now;
+            int res = SteinPart(m, n);
+            timespan = new TimeSpan((DateTime.Now - now).Ticks);
+            return res;
+        }
+
+        private static int SteinPart(int a, int b)
+        {
+
+            int res = 0;
+            if (a == 0 || a == b)
+                res = b;
+
+            if (b == 0)
+                res = a;
+
+            if (a == 1 || b == 1)
+                res = 1;
+
+            if (a % 2 == 0 && b % 2 == 0)
+                res = 2 * SteinPart(a / 2, b / 2);
+
+            if (a % 2 == 0 && b % 2 != 0)
+                res = SteinPart(a / 2, b);
+
+            if (a % 2 != 0 && b % 2 == 0)
+                res = SteinPart(a, b / 2);
+
+            if ((a % 2 != 0 && b % 2 != 0) && a < b)
+                res = SteinPart((b - a) / 2, a);
+
+            if ((a % 2 != 0 && b % 2 != 0) && a > b)
+                res = SteinPart((a - b) / 2, b);
+
+            return res;
+        }
+
+        private static int LCM(params int[] arr)
+        {
+            int max = arr[0];
+            for (int i = 1; i < arr.Length; i++)
+                if (arr[i] > max)
+                    max = arr[i];
+
+            for (int i = max; i > 0; i++)
+            {
+                bool allzero = true;
+                for (int j = 0; j < arr.Length; j++)
+                {
+                    if (i % arr[j] != 0)
+                        allzero = false;
+                    break;
+                }
+                if (allzero)
+                    return i;
+            }
+            return 0;
+        }
+    }
+}
